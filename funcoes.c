@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "funcoes.h"
 #define MAX_CONTAS 15
 
 typedef struct {
@@ -45,10 +44,32 @@ void cadastroConta() {
     scanf(" %[^\n]", novaConta.nomeCliente); 
     printf("Digite sua senha [5 dígitos]: ");
     scanf(" %[^\n]", novaConta.senha); 
+    
     printf("Digite seu saldo inicial: ");
     scanf("%f", &novaConta.saldo); 
+    while (getchar() != '\n'); 
+
+    if (novaConta.saldo < 0) {
+        printf("Saldo inicial não pode ser negativo!\n");
+        return;
+    }
 
     Contas[numContas++] = novaConta; 
-    printf("\n\nConta cadastrada com sucesso!\n");
-    printf("\nO número da sua conta é: %ld.\n", numero);
+    printf("\nConta cadastrada com sucesso!\n");
+    printf("O número da sua conta é: %ld.\n", novaConta.numero);
+}
+
+void depositar(Conta *conta) {
+    float valorDeposito;
+    printf("\nDigite o valor a ser depositado: ");
+    scanf("%f", &valorDeposito);
+    while (getchar() != '\n'); 
+    
+    if (valorDeposito <= 0) {
+        printf("\n\nValor de depósito deve ser positivo.\n");
+        return;
+    }
+
+    conta->saldo += valorDeposito;
+    printf("\n\nDepósito realizado com sucesso! Novo saldo: %.2f\n", conta->saldo);
 }
