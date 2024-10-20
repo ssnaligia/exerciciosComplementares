@@ -54,7 +54,6 @@ int main() {
 
                     if (strcmp(contaEncontrada.senha, senhaLogin) == 0) {
                         int opcaoLogin;
-
                         do {
                             printf("\n| SISTEMA BANCO - Logado(a) como %s |\n\n", contaEncontrada.nomeCliente);
                             printf("1. Consultar Saldo\n");
@@ -74,13 +73,13 @@ int main() {
                                     depositar(&contaEncontrada);
                                     break;
                                 case 3:
-                                    //sacar(&contaEncontrada);
+                                    sacar(&contaEncontrada);
                                     break;
                                 case 4:
                                     //realizarPix(&contaEncontrada);
                                     break;
                                 case 5:
-                                    printf("\nSaindo da Conta... Até mais!\n");
+                                    printf("\nSaindo da Conta... Obrigada por usar nossos serviços!\n");
                                     break;
                                 default:
                                     printf("\nOpção Inválida!\n");
