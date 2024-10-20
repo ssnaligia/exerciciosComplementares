@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <locale.h>
-#include <windows.h>
 #include "funcoes.c"
 
 int main() {
@@ -18,22 +17,20 @@ int main() {
         scanf("%d", &opcao);
         while (getchar() != '\n'); 
 
-
         if (opcao < 1 || opcao > 3) {
             printf("\nOpção Inválida!\n");
-            continue; 
+            continue;
         }
 
         switch (opcao) {
             case 1:
                 cadastroConta();
                 break;
-            case 2:
+            case 2: {
                 printf("\nDigite seu CPF: ");
                 char cpfLogin[12];
                 scanf(" %[^\n]", cpfLogin);
                 while (getchar() != '\n'); 
-
 
                 Conta contaEncontrada;
                 int contaValida = 0;
@@ -48,51 +45,57 @@ int main() {
 
                 if (contaValida) {
                     char senhaLogin[15];
-                    printf("Digite sua senha: ");
-                    scanf(" %[^\n]", senhaLogin);
-                    getchar();  
+                    int senhaCorreta = 0; 
 
-                    if (strcmp(contaEncontrada.senha, senhaLogin) == 0) {
-                        int opcaoLogin;
-                        do {
-                            printf("\n| SISTEMA BANCO - Logado(a) como %s |\n\n", contaEncontrada.nomeCliente);
-                            printf("1. Consultar Saldo\n");
-                            printf("2. Depositar\n");
-                            printf("3. Sacar\n");
-                            printf("4. Realizar Transferência/Pix\n");
-                            printf("5. Sair da Conta\n");
-                            printf("Escolha uma opção: ");
-                            scanf("%d", &opcaoLogin);
-                            getchar();  
+                    do {
+                        printf("Digite sua senha: ");
+                        scanf(" %[^\n]", senhaLogin);
+                        getchar();
 
-                            switch (opcaoLogin) {
-                                case 1:
-                                    printf("\nSaldo Atual: R$%.2f.\n", contaEncontrada.saldo);
-                                    break;
-                                case 2:
-                                    depositar(&contaEncontrada);
-                                    break;
-                                case 3:
-                                    sacar(&contaEncontrada);
-                                    break;
-                                case 4:
-                                    //realizarPix(&contaEncontrada);
-                                    break;
-                                case 5:
-                                    printf("\nSaindo da Conta... Obrigada por usar nossos serviços!\n");
-                                    break;
-                                default:
-                                    printf("\nOpção Inválida!\n");
-                                    break;
-                            }
-                        } while (opcaoLogin != 5);
-                    } else {
-                        printf("\nSenha incorreta!\n");
-                    }
+                        if (strcmp(contaEncontrada.senha, senhaLogin) == 0) {
+                            senhaCorreta = 1; 
+                            int opcaoLogin;
+                            do {
+                                printf("\n| SISTEMA BANCO - Logado(a) como %s |\n\n", contaEncontrada.nomeCliente);
+                                printf("1. Consultar Saldo\n");
+                                printf("2. Depositar\n");
+                                printf("3. Sacar\n");
+                                printf("4. Realizar Transferência/Pix\n");
+                                printf("5. Sair da Conta\n");
+                                printf("Escolha uma opção: ");
+                                scanf("%d", &opcaoLogin);
+                                getchar();
+
+                                switch (opcaoLogin) {
+                                    case 1:
+                                        printf("\nSaldo Atual: R$%.2f.\n", contaEncontrada.saldo);
+                                        break;
+                                    case 2:
+                                        depositar(&contaEncontrada);
+                                        break;
+                                    case 3:
+                                        sacar(&contaEncontrada);
+                                        break;
+                                    case 4:
+                                        realizarPix(&contaEncontrada);
+                                        break;
+                                    case 5:
+                                        printf("\nSaindo da Conta... Obrigada por usar nossos serviços!\n");
+                                        break;
+                                    default:
+                                        printf("\nOpção Inválida!\n");
+                                        break;
+                                }
+                            } while (opcaoLogin != 5);
+                        } else {
+                            printf("\nSenha incorreta! Tente novamente.\n");
+                        }
+                    } while (!senhaCorreta);
                 } else {
                     printf("\nConta não encontrada para o CPF: %s.\n", cpfLogin);
                 }
                 break;
+            }
             case 3:
                 printf("\nEncerrando...\n");
                 break;

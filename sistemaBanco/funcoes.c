@@ -66,12 +66,12 @@ void depositar(Conta *conta) {
         while (getchar() != '\n');
 
         if (valorDeposito <= 0) {
-            printf("\n\nValor de depósito deve ser positivo.\n");
+            printf("\nValor de depósito deve ser positivo.\n");
         }
     } while (valorDeposito <= 0);
 
     conta->saldo += valorDeposito;
-    printf("\n\nDepósito realizado com sucesso! Novo saldo: R$%.2f\n", conta->saldo);
+    printf("\nDepósito realizado com sucesso! Novo saldo: R$%.2f\n", conta->saldo);
 }
 
 
@@ -91,5 +91,46 @@ void sacar(Conta *conta) {
     } while (valorSaque <= 0 || valorSaque > conta->saldo); 
 
     conta->saldo -= valorSaque;  
-    printf("\n\nSaque realizado com sucesso! Novo saldo: R$%.2f\n", conta->saldo); 
+    printf("\nSaque realizado com sucesso! Novo saldo: R$%.2f\n", conta->saldo); 
+}
+
+void realizarPix(Conta *conta) {
+    char chavePix[50];
+    float valorTransferencia;
+
+    printf("\nDigite a chave PIX ou CPF do destinatário: ");
+    scanf(" %[^\n]", chavePix);
+    while (getchar() != '\n'); 
+
+    /*Conta contaDestinatario;
+    int contaValida = 0;
+    for (int i = 0; i < numContas; i++) {
+        if (strcmp(Contas[i].cpf, chavePix) == 0) {
+            contaDestinatario = Contas[i];
+            contaValida = 1;
+            break;
+        }
+    }
+
+    if (!contaValida) {
+        printf("Conta não encontrada para a chave PIX ou CPF: %s.\n", chavePix);
+        return;
+    }*/
+
+    do {
+        printf("\nDigite o valor a ser transferido: ");
+        scanf("%f", &valorTransferencia);
+        while (getchar() != '\n');
+
+        if (valorTransferencia <= 0) {
+            printf("\nO valor da transferência deve ser positivo.\n");
+        } else if (valorTransferencia > conta->saldo) {
+            printf("\nSaldo insuficiente para a transferência. Saldo atual: R$%.2f.\n", conta->saldo);
+        }
+    } while (valorTransferencia <= 0 || valorTransferencia > conta->saldo);
+
+    conta->saldo -= valorTransferencia;
+
+    printf("\nTransferência de R$%.2f realizada com sucesso para a chave PIX/CPF: %s.\n", valorTransferencia, chavePix);
+    printf("Novo saldo: R$%.2f.\n", conta->saldo);
 }
