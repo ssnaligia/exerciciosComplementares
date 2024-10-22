@@ -8,13 +8,56 @@ typedef struct {
     int numero;
     char cpf[12];
     char nomeCliente[60];
-    char senha[15];
+    char senha[12];
     float saldo;
+    int isGerente;
 } Conta;
 
 Conta Contas[MAX_CONTAS];
 int numContas = 0;
 int codigoAtual = 1;
+
+void criarContaGerente() {
+    Conta gerente;
+    gerente.numero = 12345678;  
+    strcpy(gerente.cpf, "11111111111");  
+    strcpy(gerente.nomeCliente, "Gerente Master");  
+    strcpy(gerente.senha, "admin123"); 
+    gerente.saldo = 0; 
+    gerente.isGerente = 1;  
+    Contas[numContas++] = gerente;
+}
+
+void criarContaDemo() {
+    Conta contaDemo;
+    contaDemo.numero = 987654321;
+    strcpy(contaDemo.cpf, "123456789"); 
+    strcpy(contaDemo.nomeCliente, "Ricardo");
+    strcpy(contaDemo.senha, "12345");      
+    contaDemo.saldo = 1000.00;             
+    contaDemo.isGerente = 0; 
+    Contas[numContas++] = contaDemo;
+}
+
+int autenticarUsuario(char *cpf, Conta *contaEncontrada) {
+    for (int i = 0; i < numContas; i++) {
+        if (strcmp(Contas[i].cpf, cpf) == 0) { 
+            *contaEncontrada = Contas[i]; 
+            char senhaLogin[15];
+            printf("Digite sua senha: ");
+            scanf(" %[^\n]", senhaLogin);
+            getchar();
+            if (strcmp(contaEncontrada->senha, senhaLogin) == 0) {
+                return 1; 
+            } else {
+                printf("Senha incorreta.\n");
+                return 0; 
+            }
+        }
+    }
+    printf("CPF não encontrado.\n");
+    return 0; 
+}
 
 void cadastroConta() {
     srand(time(0));
@@ -24,33 +67,25 @@ void cadastroConta() {
     }
 
     Conta novaConta;
-    long numero = 10000000 + rand() % 90000000;
-    novaConta.numero = numero;
+    novaConta.numero = 10000000 + rand() % 90000000;
 
     printf("\nDigite seu CPF: ");
     scanf(" %[^\n]", novaConta.cpf);
 
     for (int i = 0; i < numContas; i++) {
         if (strcmp(Contas[i].cpf, novaConta.cpf) == 0) {
-            printf("CPF '%s' já cadastrado! Cadastro não permitido.\n", novaConta.cpf);
+            printf("CPF '%s' já cadastrado!\n", novaConta.cpf);
             return;
         }
     }
 
     printf("Digite seu nome: ");
     scanf(" %[^\n]", novaConta.nomeCliente);
-    printf("Digite sua senha [5 dígitos]: ");
+    printf("Digite sua senha [6 dígitos]: ");
     scanf(" %[^\n]", novaConta.senha);
 
-    do {
-        printf("Digite seu saldo inicial: ");
-        scanf("%f", &novaConta.saldo);
-        while (getchar() != '\n');
-
-        if (novaConta.saldo <= 0) {
-            printf("Saldo inicial deve ser positivo!\n");
-        }
-    } while (novaConta.saldo <= 0);
+    novaConta.saldo = 0;
+    novaConta.isGerente = 0; 
 
     Contas[numContas++] = novaConta;
     printf("\nConta cadastrada com sucesso!\n");
@@ -73,7 +108,6 @@ void depositar(Conta *conta) {
     conta->saldo += valorDeposito;
     printf("\nDepósito realizado com sucesso! Novo saldo: R$%.2f\n", conta->saldo);
 }
-
 
 void sacar(Conta *conta) {
     float valorSaque;
@@ -102,7 +136,7 @@ void realizarPix(Conta *conta) {
     scanf(" %[^\n]", chavePix);
     while (getchar() != '\n'); 
 
-    /*Conta contaDestinatario;
+    Conta contaDestinatario;
     int contaValida = 0;
     for (int i = 0; i < numContas; i++) {
         if (strcmp(Contas[i].cpf, chavePix) == 0) {
@@ -115,7 +149,7 @@ void realizarPix(Conta *conta) {
     if (!contaValida) {
         printf("Conta não encontrada para a chave PIX ou CPF: %s.\n", chavePix);
         return;
-    }*/
+    }
 
     do {
         printf("\nDigite o valor a ser transferido: ");
@@ -133,4 +167,14 @@ void realizarPix(Conta *conta) {
 
     printf("\nTransferência de R$%.2f realizada com sucesso para a chave PIX/CPF: %s.\n", valorTransferencia, chavePix);
     printf("Novo saldo: R$%.2f.\n", conta->saldo);
+}
+
+void gerarRelatorio() {
+    printf("\n| Relatório de Contas |\n");
+    for (int i = 0; i < numContas; i++) {
+        printf("Conta Nº: %d\n", Contas[i].numero);
+        printf("Nome: %s\n", Contas[i].nomeCliente);
+        printf("CPF: %s\n", Contas[i].cpf);
+        printf("Saldo: R$%.2f\n\n", Contas[i].saldo);
+    }
 }
